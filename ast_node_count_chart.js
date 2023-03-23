@@ -77,11 +77,11 @@ class AstNodeCountChart {
       const chartHeight = document.getElementById('ast_node_count_chart').clientHeight;
       this.playbar = [value];
 
-      let update = d3.select('#ast_node_count_chart_svg').selectAll('rect')
+      let update = d3.select('#ast_node_count_playbar').selectAll('rect')
           .data(this.playbar);
       let enter = update.enter();
+      enter = enter.append('rect');
       update.merge(enter)
-        .append('rect')
         .attr('id', 'ast_node_count_playbar')
         .attr('x', d => this.xScale(d) + this.margin.left)
         .attr('width', 2)
@@ -183,7 +183,8 @@ class AstNodeCountChart {
       .style('font-family', 'Helvetica')
       .style('font-size', 12)
       .text('Node Count');
+
+    svg.append('g')
+      .attr('id', 'ast_node_count_playbar');
   }
-
-
 }
