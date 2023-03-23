@@ -284,23 +284,22 @@ function getEdgesBetween(nodes) {
 
 let highlightedAstBlock = null
 
-let highlightColorScale = d3.scaleLog()
+let highlightColorScale = d3
+    .scalePow()
+    .exponent(Math.E)
     .domain([0.0, 1.0])
-    .range(["grey", "purple"]);
-
-// Attempt log distance
+    .range(["steelblue", "purple"]);
 
 function mouseOverCode(e) {
   let startCoordinates = codeWidget.coordsChar({left:e.x, top:e.y})
-  let docLines = codeWidget.doc.children[0].lines
-  let totalLines = docLines.length
+  let startIndex = codeWidget.indexFromPos(startCoordinates)
   
   let currentAst = asts[+slider.value]
   // remove highlights from previous hovers
   d3.selectAll('.highlighted-ast-node')
     .classed('highlighted-ast-node', false)
     .attr('r', 3)
-    .style('fill', 'blue')
+    .style('fill', 'steelblue')
   d3.selectAll('.highlighted-ast-edge')
     .classed('highlighted-ast-edge', false)
 
@@ -308,7 +307,8 @@ function mouseOverCode(e) {
   let highlightTheseNodes = getAllChildrenContaining(startCoordinates.line, startCoordinates.ch, currentAst);
   let highlightTheseEdges = getEdgesBetween(highlightTheseNodes);
   highlightTheseNodes.forEach(node => {
-    let x = 1 - ((startCoordinates.line - node.startLine) / totalLines)
+    let nodeIndex = codeWidget.indexFromPos({ line: node.startLine, ch: node.col_offset})
+    let x = 1 - ((startIndex - nodeIndex) / startIndex)
     nodeId = getAstNodeId(node)
     d3.select(`#${nodeId}`)
       .classed('highlighted-ast-node', true)
