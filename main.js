@@ -559,6 +559,7 @@ function fileChanged() {
 
   astNodeCountChart = new AstNodeCountChart();
   astNodeCountChart.create(asts);
+  astNodeCountChart.updatePlaybar(slider.value);
 
   timeline = new Timeline();
   timeline.create(df);
@@ -583,6 +584,7 @@ function sliderChanged(slider) {
 
   chart.updatePlaybar(slider.value);
   timeline.updatePlaybar(slider.value);
+  astNodeCountChart.updatePlaybar(slider.value);
 }
 
 //-----------------------------------------------------------------------------
